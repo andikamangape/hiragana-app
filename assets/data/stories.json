@@ -1,0 +1,212 @@
+[
+  {
+    "id": "s1",
+    "title": "ねこ",
+    "titleId": "Kucing",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしはねこがすきです", "romaji": "watashi wa neko ga suki desu", "id": "Aku suka kucing" },
+      { "kana": "ねこはかわいいです", "romaji": "neko wa kawaii desu", "id": "Kucing itu lucu" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang disukai?", "answerKana": ["ねこ"], "answerId": "kucing", "bank": ["こ", "ね"] },
+      { "prompt": "Bagaimana kucingnya?", "answerKana": ["かわいい"], "answerId": "lucu", "bank": ["わ", "か", "い", "い"] }
+    ]
+  },
+  {
+    "id": "s2",
+    "title": "いぬ",
+    "titleId": "Anjing",
+    "level": 1,
+    "sentences": [
+      { "kana": "うちにいぬがいます", "romaji": "uchi ni inu ga imasu", "id": "Di rumah ada anjing" },
+      { "kana": "いぬはげんきです", "romaji": "inu wa genki desu", "id": "Anjing itu sehat" }
+    ],
+    "questions": [
+      { "prompt": "Hewan apa yang ada di rumah?", "answerKana": ["いぬ"], "answerId": "anjing", "bank": ["ぬ", "い"] },
+      { "prompt": "Bagaimana anjingnya?", "answerKana": ["げんき"], "answerId": "sehat", "bank": ["ん", "げ", "き"] }
+    ]
+  },
+  {
+    "id": "s3",
+    "title": "ごはん",
+    "titleId": "Makan",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしはごはんをたべます", "romaji": "watashi wa gohan wo tabemasu", "id": "Aku makan nasi" },
+      { "kana": "ごはんはおいしいです", "romaji": "gohan wa oishii desu", "id": "Nasinya enak" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang dimakan?", "answerKana": ["ごはん"], "answerId": "nasi", "bank": ["は", "ご", "ん"] },
+      { "prompt": "Bagaimana rasa nasinya?", "answerKana": ["おいしい"], "answerId": "enak", "bank": ["い", "お", "し", "い"] }
+    ]
+  },
+  {
+    "id": "s4",
+    "title": "みず",
+    "titleId": "Air",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしはみずをのみます", "romaji": "watashi wa mizu wo nomimasu", "id": "Aku minum air" },
+      { "kana": "みずはつめたいです", "romaji": "mizu wa tsumetai desu", "id": "Airnya dingin" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang diminum?", "answerKana": ["みず"], "answerId": "air", "bank": ["ず", "み"] },
+      { "prompt": "Bagaimana airnya?", "answerKana": ["つめたい"], "answerId": "dingin", "bank": ["め", "つ", "い", "た"] }
+    ]
+  },
+  {
+    "id": "s5",
+    "title": "かぞく",
+    "titleId": "Keluarga",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしのかぞくはよにんです", "romaji": "watashi no kazoku wa yonin desu", "id": "Keluargaku empat orang" },
+      { "kana": "ちちとははがいます", "romaji": "chichi to haha ga imasu", "id": "Ada ayah dan ibu" }
+    ],
+    "questions": [
+      { "prompt": "Berapa orang keluargaku?", "answerKana": ["よにん"], "answerId": "empat orang", "bank": ["に", "ん", "よ"] },
+      { "prompt": "Siapa saja yang ada?", "answerKana": ["ちち", "はは"], "answerId": "ayah dan ibu", "bank": ["は", "ち", "は", "ち"] }
+    ]
+  },
+  {
+    "id": "s6",
+    "title": "がっこう",
+    "titleId": "Sekolah",
+    "level": 1,
+    "sentences": [
+      { "kana": "まいにちがっこうにいきます", "romaji": "mainichi gakkou ni ikimasu", "id": "Setiap hari pergi ke sekolah" },
+      { "kana": "がっこうはたのしいです", "romaji": "gakkou wa tanoshii desu", "id": "Sekolah itu menyenangkan" }
+    ],
+    "questions": [
+      { "prompt": "Ke mana aku pergi setiap hari?", "answerKana": ["がっこう"], "answerId": "sekolah", "bank": ["こ", "う", "が", "っ"] },
+      { "prompt": "Bagaimana sekolahnya?", "answerKana": ["たのしい"], "answerId": "menyenangkan", "bank": ["の", "し", "た", "い"] }
+    ]
+  },
+  {
+    "id": "s7",
+    "title": "あめ",
+    "titleId": "Hujan",
+    "level": 1,
+    "sentences": [
+      { "kana": "きのうはあめがふります", "romaji": "kinou wa ame ga furimasu", "id": "Kemarin turun hujan" },
+      { "kana": "わたしはかさをもちます", "romaji": "watashi wa kasa wo mochimasu", "id": "Aku membawa payung" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang turun kemarin?", "answerKana": ["あめ"], "answerId": "hujan", "bank": ["め", "あ"] },
+      { "prompt": "Apa yang aku bawa?", "answerKana": ["かさ"], "answerId": "payung", "bank": ["さ", "か"] }
+    ]
+  },
+  {
+    "id": "s8",
+    "title": "ほん",
+    "titleId": "Buku",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしはほんをよみます", "romaji": "watashi wa hon wo yomimasu", "id": "Aku membaca buku" },
+      { "kana": "ほんはとてもおもしろいです", "romaji": "hon wa totemo omoshiroi desu", "id": "Bukunya sangat menarik" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang aku baca?", "answerKana": ["ほん"], "answerId": "buku", "bank": ["ん", "ほ"] },
+      { "prompt": "Bagaimana bukunya?", "answerKana": ["おもしろい"], "answerId": "menarik", "bank": ["も", "し", "ろ", "お", "い"] }
+    ]
+  },
+  {
+    "id": "s9",
+    "title": "ともだち",
+    "titleId": "Teman",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしのともだちはやさしいです", "romaji": "watashi no tomodachi wa yasashii desu", "id": "Temanku baik hati" },
+      { "kana": "ふたりであそびます", "romaji": "futari de asobimasu", "id": "Bermain berdua" }
+    ],
+    "questions": [
+      { "prompt": "Bagaimana temanku?", "answerKana": ["やさしい"], "answerId": "baik hati", "bank": ["さ", "や", "し", "い"] },
+      { "prompt": "Berapa orang yang bermain?", "answerKana": ["ふたり"], "answerId": "dua orang", "bank": ["た", "り", "ふ"] }
+    ]
+  },
+  {
+    "id": "s10",
+    "title": "やさい",
+    "titleId": "Sayur",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしはやさいをたべます", "romaji": "watashi wa yasai wo tabemasu", "id": "Aku makan sayur" },
+      { "kana": "やさいはからだにいいです", "romaji": "yasai wa karada ni ii desu", "id": "Sayur baik untuk tubuh" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang dimakan?", "answerKana": ["やさい"], "answerId": "sayur", "bank": ["さ", "い", "や"] },
+      { "prompt": "Sayur baik untuk apa?", "answerKana": ["からだ"], "answerId": "tubuh", "bank": ["ら", "か", "だ"] }
+    ]
+  },
+  {
+    "id": "s11",
+    "title": "うみ",
+    "titleId": "Laut",
+    "level": 1,
+    "sentences": [
+      { "kana": "なつにうみへいきます", "romaji": "natsu ni umi e ikimasu", "id": "Musim panas pergi ke laut" },
+      { "kana": "うみはあおくてひろいです", "romaji": "umi wa aokute hiroi desu", "id": "Lautnya biru dan luas" }
+    ],
+    "questions": [
+      { "prompt": "Ke mana perginya saat musim panas?", "answerKana": ["うみ"], "answerId": "laut", "bank": ["み", "う"] },
+      { "prompt": "Bagaimana lautnya?", "answerKana": ["あおくてひろい"], "answerId": "biru dan luas", "bank": ["お", "あ", "く", "て", "ろ", "ひ", "い"] }
+    ]
+  },
+  {
+    "id": "s12",
+    "title": "うち",
+    "titleId": "Rumah",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしのうちはちいさいです", "romaji": "watashi no uchi wa chiisai desu", "id": "Rumahku kecil" },
+      { "kana": "でもあたたかいです", "romaji": "demo atatakai desu", "id": "Tapi hangat" }
+    ],
+    "questions": [
+      { "prompt": "Bagaimana rumahku?", "answerKana": ["ちいさい"], "answerId": "kecil", "bank": ["い", "ち", "さ", "い"] },
+      { "prompt": "Rumahnya terasa bagaimana?", "answerKana": ["あたたかい"], "answerId": "hangat", "bank": ["た", "あ", "か", "い", "た"] }
+    ]
+  },
+  {
+    "id": "s13",
+    "title": "おんがく",
+    "titleId": "Musik",
+    "level": 1,
+    "sentences": [
+      { "kana": "わたしはおんがくをききます", "romaji": "watashi wa ongaku wo kikimasu", "id": "Aku mendengarkan musik" },
+      { "kana": "おんがくはたのしいです", "romaji": "ongaku wa tanoshii desu", "id": "Musik itu menyenangkan" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang didengarkan?", "answerKana": ["おんがく"], "answerId": "musik", "bank": ["が", "ん", "お", "く"] },
+      { "prompt": "Bagaimana musiknya?", "answerKana": ["たのしい"], "answerId": "menyenangkan", "bank": ["の", "た", "い", "し"] }
+    ]
+  },
+  {
+    "id": "s14",
+    "title": "あさ",
+    "titleId": "Pagi",
+    "level": 1,
+    "sentences": [
+      { "kana": "あさにわたしはおきます", "romaji": "asa ni watashi wa okimasu", "id": "Pagi aku bangun" },
+      { "kana": "それからしごとへいきます", "romaji": "sorekara shigoto e ikimasu", "id": "Lalu pergi kerja" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang aku lakukan di pagi hari?", "answerKana": ["おきます"], "answerId": "bangun", "bank": ["き", "お", "ま", "す"] },
+      { "prompt": "Setelah itu pergi ke mana?", "answerKana": ["しごと"], "answerId": "kerja", "bank": ["ご", "し", "と"] }
+    ]
+  },
+  {
+    "id": "s15",
+    "title": "よる",
+    "titleId": "Malam",
+    "level": 1,
+    "sentences": [
+      { "kana": "よるはそらにほしがみえます", "romaji": "yoru wa sora ni hoshi ga miemasu", "id": "Malam di langit terlihat bintang" },
+      { "kana": "わたしはねます", "romaji": "watashi wa nemasu", "id": "Aku tidur" }
+    ],
+    "questions": [
+      { "prompt": "Apa yang terlihat di langit malam?", "answerKana": ["ほし"], "answerId": "bintang", "bank": ["し", "ほ"] },
+      { "prompt": "Apa yang aku lakukan?", "answerKana": ["ねます"], "answerId": "tidur", "bank": ["ま", "ね", "す"] }
+    ]
+  }
+]

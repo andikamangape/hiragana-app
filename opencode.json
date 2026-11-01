@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "tokenportal": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "TokenPortal",
+      "options": {
+        "baseURL": "https://tokenportal.id/v1",
+        "apiKey": "{env:TOKENPORTAL_API_KEY}"
+      },
+      "models": {
+        "deepseek-v4.1-flash-unli": {
+          "name": "deepseek-v4.1-flash-unli"
+        }
+      }
+    }
+  },
+  "model": "tokenportal/deepseek-v4.1-flash-unli"
+}

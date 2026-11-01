@@ -1,0 +1,570 @@
+[
+    {
+        "character":  "あ",
+        "romaji":  "a",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "い",
+        "romaji":  "i",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "う",
+        "romaji":  "u",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "え",
+        "romaji":  "e",
+        "type":  "hiragana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "お",
+        "romaji":  "o",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "か",
+        "romaji":  "ka",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "き",
+        "romaji":  "ki",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "く",
+        "romaji":  "ku",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "け",
+        "romaji":  "ke",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "こ",
+        "romaji":  "ko",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "さ",
+        "romaji":  "sa",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "し",
+        "romaji":  "shi",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "す",
+        "romaji":  "su",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "せ",
+        "romaji":  "se",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "そ",
+        "romaji":  "so",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "た",
+        "romaji":  "ta",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "ち",
+        "romaji":  "chi",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "つ",
+        "romaji":  "tsu",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "て",
+        "romaji":  "te",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "と",
+        "romaji":  "to",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "な",
+        "romaji":  "na",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "に",
+        "romaji":  "ni",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ぬ",
+        "romaji":  "nu",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ね",
+        "romaji":  "ne",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "の",
+        "romaji":  "no",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "は",
+        "romaji":  "ha",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ひ",
+        "romaji":  "hi",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ふ",
+        "romaji":  "fu",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "へ",
+        "romaji":  "he",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ほ",
+        "romaji":  "ho",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ま",
+        "romaji":  "ma",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "み",
+        "romaji":  "mi",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "む",
+        "romaji":  "mu",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "め",
+        "romaji":  "me",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "も",
+        "romaji":  "mo",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "や",
+        "romaji":  "ya",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ya"
+    },
+    {
+        "character":  "ゆ",
+        "romaji":  "yu",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ya"
+    },
+    {
+        "character":  "よ",
+        "romaji":  "yo",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ya"
+    },
+    {
+        "character":  "ら",
+        "romaji":  "ra",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "り",
+        "romaji":  "ri",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "る",
+        "romaji":  "ru",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "れ",
+        "romaji":  "re",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "ろ",
+        "romaji":  "ro",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "わ",
+        "romaji":  "wa",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "wa"
+    },
+    {
+        "character":  "を",
+        "romaji":  "wo",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "wa"
+    },
+    {
+        "character":  "ん",
+        "romaji":  "n",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "n"
+    },
+    {
+        "character":  "が",
+        "romaji":  "ga",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ぎ",
+        "romaji":  "gi",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ぐ",
+        "romaji":  "gu",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "げ",
+        "romaji":  "ge",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ご",
+        "romaji":  "go",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ざ",
+        "romaji":  "za",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "じ",
+        "romaji":  "ji",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ず",
+        "romaji":  "zu",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ぜ",
+        "romaji":  "ze",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ぞ",
+        "romaji":  "zo",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "だ",
+        "romaji":  "da",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "ぢ",
+        "romaji":  "di",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "づ",
+        "romaji":  "du",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "で",
+        "romaji":  "de",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "ど",
+        "romaji":  "do",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "ば",
+        "romaji":  "ba",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "び",
+        "romaji":  "bi",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ぶ",
+        "romaji":  "bu",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "べ",
+        "romaji":  "be",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ぼ",
+        "romaji":  "bo",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ぱ",
+        "romaji":  "pa",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ぴ",
+        "romaji":  "pi",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ぷ",
+        "romaji":  "pu",
+        "type":  "hiragana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ぺ",
+        "romaji":  "pe",
+        "type":  "hiragana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ぽ",
+        "romaji":  "po",
+        "type":  "hiragana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "pa"
+    }
+]

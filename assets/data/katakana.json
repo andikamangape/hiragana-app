@@ -1,0 +1,570 @@
+[
+    {
+        "character":  "ア",
+        "romaji":  "a",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "イ",
+        "romaji":  "i",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "ウ",
+        "romaji":  "u",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "エ",
+        "romaji":  "e",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "オ",
+        "romaji":  "o",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "a"
+    },
+    {
+        "character":  "カ",
+        "romaji":  "ka",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "キ",
+        "romaji":  "ki",
+        "type":  "katakana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "ク",
+        "romaji":  "ku",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "ケ",
+        "romaji":  "ke",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "コ",
+        "romaji":  "ko",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ka"
+    },
+    {
+        "character":  "サ",
+        "romaji":  "sa",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "シ",
+        "romaji":  "shi",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "ス",
+        "romaji":  "su",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "セ",
+        "romaji":  "se",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "ソ",
+        "romaji":  "so",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "sa"
+    },
+    {
+        "character":  "タ",
+        "romaji":  "ta",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "チ",
+        "romaji":  "chi",
+        "type":  "katakana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "ツ",
+        "romaji":  "tsu",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "テ",
+        "romaji":  "te",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "ト",
+        "romaji":  "to",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ta"
+    },
+    {
+        "character":  "ナ",
+        "romaji":  "na",
+        "type":  "katakana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ニ",
+        "romaji":  "ni",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ヌ",
+        "romaji":  "nu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ネ",
+        "romaji":  "ne",
+        "type":  "katakana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ノ",
+        "romaji":  "no",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "na"
+    },
+    {
+        "character":  "ハ",
+        "romaji":  "ha",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ヒ",
+        "romaji":  "hi",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "フ",
+        "romaji":  "fu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ヘ",
+        "romaji":  "he",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "ホ",
+        "romaji":  "ho",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ha"
+    },
+    {
+        "character":  "マ",
+        "romaji":  "ma",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "ミ",
+        "romaji":  "mi",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "ム",
+        "romaji":  "mu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "メ",
+        "romaji":  "me",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "モ",
+        "romaji":  "mo",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ma"
+    },
+    {
+        "character":  "ヤ",
+        "romaji":  "ya",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ya"
+    },
+    {
+        "character":  "ユ",
+        "romaji":  "yu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ya"
+    },
+    {
+        "character":  "ヨ",
+        "romaji":  "yo",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ya"
+    },
+    {
+        "character":  "ラ",
+        "romaji":  "ra",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "リ",
+        "romaji":  "ri",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "ル",
+        "romaji":  "ru",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "レ",
+        "romaji":  "re",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "ロ",
+        "romaji":  "ro",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ra"
+    },
+    {
+        "character":  "ワ",
+        "romaji":  "wa",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "wa"
+    },
+    {
+        "character":  "ヲ",
+        "romaji":  "wo",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "wa"
+    },
+    {
+        "character":  "ン",
+        "romaji":  "n",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "n"
+    },
+    {
+        "character":  "ガ",
+        "romaji":  "ga",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ギ",
+        "romaji":  "gi",
+        "type":  "katakana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "グ",
+        "romaji":  "gu",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ゲ",
+        "romaji":  "ge",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ゴ",
+        "romaji":  "go",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ga"
+    },
+    {
+        "character":  "ザ",
+        "romaji":  "za",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ジ",
+        "romaji":  "ji",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ズ",
+        "romaji":  "zu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ゼ",
+        "romaji":  "ze",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ゾ",
+        "romaji":  "zo",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "za"
+    },
+    {
+        "character":  "ダ",
+        "romaji":  "da",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "ヂ",
+        "romaji":  "di",
+        "type":  "katakana",
+        "strokeCount":  4,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "ヅ",
+        "romaji":  "du",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "デ",
+        "romaji":  "de",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "ド",
+        "romaji":  "do",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "da"
+    },
+    {
+        "character":  "バ",
+        "romaji":  "ba",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ビ",
+        "romaji":  "bi",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ブ",
+        "romaji":  "bu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ベ",
+        "romaji":  "be",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "ボ",
+        "romaji":  "bo",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "ba"
+    },
+    {
+        "character":  "パ",
+        "romaji":  "pa",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ピ",
+        "romaji":  "pi",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "プ",
+        "romaji":  "pu",
+        "type":  "katakana",
+        "strokeCount":  2,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ペ",
+        "romaji":  "pe",
+        "type":  "katakana",
+        "strokeCount":  1,
+        "audioPath":  null,
+        "row":  "pa"
+    },
+    {
+        "character":  "ポ",
+        "romaji":  "po",
+        "type":  "katakana",
+        "strokeCount":  3,
+        "audioPath":  null,
+        "row":  "pa"
+    }
+]
