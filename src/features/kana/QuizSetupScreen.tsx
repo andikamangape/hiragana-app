@@ -30,6 +30,7 @@ export function QuizSetupScreen() {
   const [type, setType] = useState<KanaType>('hiragana');
   const [count, setCount] = useState('10');
   const [error, setError] = useState<string | null>(null);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   const kanaList = useMemo(() => kanaSource.getKana(type), [type]);
   const maxKana = kanaList.length;
@@ -45,18 +46,45 @@ export function QuizSetupScreen() {
     return result;
   }, [kanaList]);
 
+  const selectedKanaCount = useMemo(
+    () =>
+      selectedRows.length === 0
+        ? maxKana
+        : kanaList.filter((k) => selectedRows.includes(k.row)).length,
+    [kanaList, selectedRows, maxKana],
+  );
+
+  const changeType = (next: KanaType) => {
+    setType(next);
+    setSelectedRows([]);
+    setError(null);
+  };
+
+  const toggleRow = (row: string) => {
+    setError(null);
+    setSelectedRows((prev) =>
+      prev.includes(row)
+        ? prev.filter((r) => r !== row)
+        : [...prev, row],
+    );
+  };
+
   const startQuiz = () => {
     const value = parseInt(count.trim(), 10);
     if (Number.isNaN(value) || value < 1) {
       setError('Masukkan angka minimal 1');
       return;
     }
-    if (value > maxKana) {
-      setError(`Maksimal ${maxKana} soal untuk tipe ini`);
+    if (value > selectedKanaCount) {
+      setError(`Maksimal ${selectedKanaCount} soal untuk pilihan ini`);
       return;
     }
     setError(null);
-    navigation.navigate('Quiz', { totalQuestions: value, kanaType: type });
+    navigation.navigate('Quiz', {
+      totalQuestions: value,
+      kanaType: type,
+      rows: selectedRows.length > 0 ? selectedRows : undefined,
+    });
   };
 
   const startRowQuiz = (row: string) => {
@@ -79,7 +107,7 @@ export function QuizSetupScreen() {
           <FadeSlideIn style={styles.fullWidth}>
             <SegmentedToggle
               value={type}
-              onChange={setType}
+              onChange={changeType}
               options={[
                 { value: 'hiragana', label: 'Hiragana' },
                 { value: 'katakana', label: 'Katakana' },
@@ -91,10 +119,57 @@ export function QuizSetupScreen() {
 
           <FadeSlideIn delay={80} style={styles.fullWidth}>
             <View style={styles.card}>
+              <Text style={styles.sectionTitle}>Pilih beberapa baris</Text>
+              <View style={styles.spacer4} />
+              <Text style={styles.sectionSubtitle}>
+                Centang baris yang mau dikerjakan, lalu mulai
+              </Text>
+              <View style={styles.spacer12} />
+              <View style={styles.rowChips}>
+                {rows.map((row) => {
+                  const active = selectedRows.includes(row);
+                  return (
+                    <Pressable
+                      key={row}
+                      style={[styles.rowChip, active && styles.rowChipActive]}
+                      onPress={() => toggleRow(row)}
+                    >
+                      <Ionicons
+                        name={active ? 'checkmark-circle' : 'ellipse-outline'}
+                        size={15}
+                        color={active ? colors.primary : colors.textSecondary}
+                      />
+                      <Text
+                        style={[
+                          styles.rowChipLabel,
+                          active && styles.rowChipLabelActive,
+                        ]}
+                      >
+                        Baris {row}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
+              </View>
+              <View style={styles.spacer12} />
+              <Button
+                label="Mulai Kuis Baris Terpilih"
+                icon="layers"
+                variant="primary"
+                disabled={selectedRows.length === 0}
+                onPress={startQuiz}
+              />
+            </View>
+          </FadeSlideIn>
+
+          <View style={styles.spacer24} />
+
+          <FadeSlideIn delay={160} style={styles.fullWidth}>
+            <View style={styles.card}>
               <Text style={styles.sectionTitle}>Jumlah soal</Text>
               <View style={styles.spacer4} />
               <Text style={styles.sectionSubtitle}>
-                Maksimal {maxKana} soal tersedia
+                Maksimal {selectedKanaCount} soal tersedia
               </Text>
               <View style={styles.spacer12} />
               <TextInput
@@ -103,14 +178,14 @@ export function QuizSetupScreen() {
                 keyboardType="number-pad"
                 maxLength={2}
                 style={styles.input}
-                placeholder={`1 - ${maxKana}`}
+                placeholder={`1 - ${selectedKanaCount}`}
                 placeholderTextColor={colors.textSecondary}
                 onSubmitEditing={startQuiz}
               />
               <View style={styles.spacer12} />
               <View style={styles.presetRow}>
                 {PRESETS.map((n) => {
-                  const disabled = n > maxKana;
+                  const disabled = n > selectedKanaCount;
                   const active = count === `${n}`;
                   return (
                     <Pressable
@@ -320,6 +395,13 @@ const styles = StyleSheet.create({
     fontSize: fontSize.label,
     fontFamily: fontFamily.medium,
     color: colors.textSecondary,
+  },
+  rowChipActive: {
+    borderColor: colors.primary,
+    backgroundColor: withAlpha(colors.primary, 0.1),
+  },
+  rowChipLabelActive: {
+    color: colors.primary,
   },
   weakCard: {
     backgroundColor: colors.surface,

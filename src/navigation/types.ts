@@ -19,6 +19,7 @@ export type RootStackParamList = {
     totalQuestions: number;
     kanaType: KanaType;
     row?: string;
+    rows?: string[];
     mode?: 'srs';
   };
   QuizResult: {
@@ -26,6 +27,7 @@ export type RootStackParamList = {
     total: number;
     kanaType: KanaType;
     mode?: 'srs';
+    rows?: string[];
     wrong: QuizWrongItem[];
   };
   StoryList: undefined;

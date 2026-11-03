@@ -25,7 +25,7 @@ function messageFor(ratio: number, perfect: boolean): string {
 export function QuizResultScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<ResultRoute>();
-  const { score, total, kanaType, mode, wrong } = route.params;
+  const { score, total, kanaType, mode, rows, wrong } = route.params;
 
   const ratio = total === 0 ? 0 : score / total;
   const perfect = total > 0 && score === total;
@@ -102,6 +102,7 @@ export function QuizResultScreen() {
                   totalQuestions: total,
                   kanaType,
                   mode,
+                  rows,
                 })
               }
             />

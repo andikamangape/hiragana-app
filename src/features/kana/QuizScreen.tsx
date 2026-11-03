@@ -73,7 +73,7 @@ function buildQuestions(
 export function QuizScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<QuizRoute>();
-  const { totalQuestions, kanaType, row, mode } = route.params;
+  const { totalQuestions, kanaType, row, rows, mode } = route.params;
 
   const [questions, setQuestions] = useState<QuizItem[] | null>(null);
   const [current, setCurrent] = useState(0);
@@ -87,7 +87,12 @@ export function QuizScreen() {
   const load = useCallback(async () => {
     const all = kanaSource.getKana(kanaType);
     const stats = await statsStore.getLetterStats();
-    let pool = row == null ? all : all.filter((k) => k.row === row);
+    let pool = all;
+    if (rows?.length) {
+      pool = all.filter((k) => rows.includes(k.row));
+    } else if (row != null) {
+      pool = all.filter((k) => k.row === row);
+    }
     if (mode === 'srs') {
       pool = pool.filter(
         (k) => (stats[letterKey(kanaType, k.romaji)]?.wrong ?? 0) > 0,
@@ -97,7 +102,7 @@ export function QuizScreen() {
       items: buildQuestions(pool, stats, totalQuestions),
       empty: mode === 'srs' && pool.length === 0,
     };
-  }, [kanaType, row, totalQuestions, mode]);
+  }, [kanaType, row, rows, totalQuestions, mode]);
 
   useEffect(() => {
     let active = true;
@@ -146,10 +151,11 @@ export function QuizScreen() {
         total: questions?.length ?? 0,
         kanaType,
         mode,
+        rows,
         wrong: wrongRef.current,
       });
     },
-    [questions, persist, navigation, kanaType, mode],
+    [questions, persist, navigation, kanaType, mode, rows],
   );
 
   const nextQuestion = () => {
