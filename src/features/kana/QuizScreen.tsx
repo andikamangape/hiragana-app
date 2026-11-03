@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
+import PagerView from 'react-native-pager-view';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
@@ -29,6 +30,12 @@ type QuizRoute = RouteProp<RootStackParamList, 'Quiz'>;
 interface QuizItem {
   kana: Kana;
   options: string[];
+}
+
+interface Answer {
+  selected: number | null;
+  answered: boolean;
+  correct: boolean;
 }
 
 function shuffle<T>(array: T[]): T[] {
@@ -70,19 +77,22 @@ function buildQuestions(
   });
 }
 
+const emptyAnswer = (): Answer => ({
+  selected: null,
+  answered: false,
+  correct: false,
+});
+
 export function QuizScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<QuizRoute>();
   const { totalQuestions, kanaType, row, rows, mode } = route.params;
 
+  const pagerRef = React.useRef<PagerView>(null);
   const [questions, setQuestions] = useState<QuizItem[] | null>(null);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [answered, setAnswered] = useState(false);
   const [empty, setEmpty] = useState(false);
-  const letterAnswersRef = React.useRef<Record<string, boolean>>({});
-  const wrongRef = React.useRef<QuizWrongItem[]>([]);
 
   const load = useCallback(async () => {
     const all = kanaSource.getKana(kanaType);
@@ -109,6 +119,7 @@ export function QuizScreen() {
     load().then((next) => {
       if (active) {
         setQuestions(next.items);
+        setAnswers(next.items.map(emptyAnswer));
         setEmpty(next.empty);
       }
     });
@@ -117,57 +128,75 @@ export function QuizScreen() {
     };
   }, [load]);
 
-  const selectAnswer = (option: string) => {
-    if (answered || !questions) return;
-    setAnswered(true);
-    setSelected(questions[current].options.indexOf(option));
-    const item = questions[current];
-    const isCorrect = option === item.kana.romaji;
-    if (isCorrect) setScore((s) => s + 1);
-    else
-      wrongRef.current.push({
-        character: item.kana.character,
-        romaji: item.kana.romaji,
-      });
-    letterAnswersRef.current[item.kana.romaji] = isCorrect;
+  const score = useMemo(
+    () => answers.reduce((sum, a) => sum + (a.correct ? 1 : 0), 0),
+    [answers],
+  );
+
+  const allAnswered = useMemo(
+    () => answers.length > 0 && answers.every((a) => a.answered),
+    [answers],
+  );
+
+  const selectAnswer = (index: number, option: string) => {
+    if (!questions) return;
+    setAnswers((prev) => {
+      const existing = prev[index];
+      if (!existing || existing.answered) return prev;
+      const item = questions[index];
+      const next = [...prev];
+      next[index] = {
+        selected: item.options.indexOf(option),
+        answered: true,
+        correct: option === item.kana.romaji,
+      };
+      return next;
+    });
+  };
+
+  const goToPage = (index: number) => {
+    if (!questions) return;
+    const clamped = Math.max(0, Math.min(index, questions.length - 1));
+    pagerRef.current?.setPage(clamped);
+    setCurrent(clamped);
   };
 
   const persist = useCallback(async () => {
     if (!questions) return;
+    const letterAnswers: Record<string, boolean> = {};
+    const wrong: QuizWrongItem[] = [];
+    questions.forEach((item, index) => {
+      const a = answers[index];
+      if (!a || !a.answered) return;
+      letterAnswers[item.kana.romaji] = a.correct;
+      if (!a.correct) {
+        wrong.push({
+          character: item.kana.character,
+          romaji: item.kana.romaji,
+        });
+      }
+    });
     await statsStore.recordQuizResult({
       score,
       total: questions.length,
       type: kanaType,
       date: new Date().toISOString(),
     });
-    await statsStore.recordLetterAnswers(letterAnswersRef.current, kanaType);
-  }, [questions, score, kanaType]);
+    await statsStore.recordLetterAnswers(letterAnswers, kanaType);
+    return wrong;
+  }, [questions, answers, score, kanaType]);
 
-  const showResult = useCallback(
-    async (finalScore: number) => {
-      await persist();
-      navigation.replace('QuizResult', {
-        score: finalScore,
-        total: questions?.length ?? 0,
-        kanaType,
-        mode,
-        rows,
-        wrong: wrongRef.current,
-      });
-    },
-    [questions, persist, navigation, kanaType, mode, rows],
-  );
-
-  const nextQuestion = () => {
-    if (!questions) return;
-    if (current < questions.length - 1) {
-      setCurrent((c) => c + 1);
-      setSelected(null);
-      setAnswered(false);
-    } else {
-      showResult(score);
-    }
-  };
+  const showResult = useCallback(async () => {
+    const wrong = (await persist()) ?? [];
+    navigation.replace('QuizResult', {
+      score,
+      total: questions?.length ?? 0,
+      kanaType,
+      mode,
+      rows,
+      wrong,
+    });
+  }, [persist, navigation, score, questions, kanaType, mode, rows]);
 
   if (!questions) {
     return (
@@ -207,8 +236,74 @@ export function QuizScreen() {
     );
   }
 
-  const item = questions[current];
   const isLast = current === questions.length - 1;
+
+  const renderPage = (item: QuizItem, index: number) => {
+    const answer = answers[index];
+    return (
+      <View key={item.kana.character + index} style={styles.page}>
+        <ScrollView
+          contentContainerStyle={styles.pageContent}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.centerColumn}>
+            <View style={styles.questionCard}>
+              <Text style={styles.questionChar}>{item.kana.character}</Text>
+              <Pressable
+                style={styles.listenButton}
+                hitSlop={8}
+                onPress={() => kanaAudio.playRomaji(item.kana.romaji)}
+              >
+                <Ionicons
+                  name="volume-medium"
+                  size={18}
+                  color={colors.primary}
+                />
+                <Text style={styles.listenLabel}>{item.kana.romaji}</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.spacer24} />
+            <View style={styles.options}>
+              {item.options.map((option) => {
+                const isCorrect = option === item.kana.romaji;
+                let borderColor: string = colors.border;
+                let bg: string = colors.surface;
+                let icon: keyof typeof Ionicons.glyphMap | null = null;
+                let iconColor: string = colors.primary;
+                if (answer.answered) {
+                  const isSelectedOpt = option === item.options[answer.selected ?? -1];
+                  if (isCorrect) {
+                    icon = 'checkmark-circle';
+                    iconColor = colors.success;
+                    bg = withAlpha(colors.success, 0.1);
+                    borderColor = colors.success;
+                  } else if (isSelectedOpt) {
+                    icon = 'close-circle';
+                    iconColor = colors.error;
+                    bg = withAlpha(colors.error, 0.08);
+                    borderColor = colors.error;
+                  }
+                }
+                return (
+                  <Pressable
+                    key={option}
+                    onPress={() => selectAnswer(index, option)}
+                    style={[styles.option, { backgroundColor: bg, borderColor }]}
+                  >
+                    <Text style={styles.optionLabel}>{option}</Text>
+                    {icon && (
+                      <Ionicons name={icon} size={22} color={iconColor} />
+                    )}
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.screen}>
@@ -222,12 +317,14 @@ export function QuizScreen() {
           </View>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
+
+      <View style={styles.topBar}>
         <View style={styles.centerColumn}>
           <View style={styles.progressRow}>
             <Text style={styles.progressLabel}>
               Soal {current + 1} / {questions.length}
             </Text>
+            <Text style={styles.progressHint}>Geser untuk pindah</Text>
           </View>
           <View style={styles.progressTrack}>
             <View
@@ -237,71 +334,54 @@ export function QuizScreen() {
               ]}
             />
           </View>
+        </View>
+      </View>
 
-          <View style={styles.spacer24} />
-          <View style={styles.questionCard}>
-            <Text style={styles.questionChar}>{item.kana.character}</Text>
-            <Pressable
-              style={styles.listenButton}
-              hitSlop={8}
-              onPress={() => kanaAudio.playRomaji(item.kana.romaji)}
-            >
-              <Ionicons name="volume-medium" size={18} color={colors.primary} />
-              <Text style={styles.listenLabel}>{item.kana.romaji}</Text>
-            </Pressable>
-          </View>
+      <PagerView
+        ref={pagerRef}
+        style={styles.pager}
+        initialPage={0}
+        onPageSelected={(e) => setCurrent(e.nativeEvent.position)}
+      >
+        {questions.map(renderPage)}
+      </PagerView>
 
-          <View style={styles.spacer24} />
-          <View style={styles.options}>
-            {item.options.map((option) => {
-              const isCorrect = option === item.kana.romaji;
-              let borderColor: string = colors.border;
-              let bg: string = colors.surface;
-              let icon: keyof typeof Ionicons.glyphMap | null = null;
-              let iconColor: string = colors.primary;
-              if (answered) {
-                const isSelectedOpt =
-                  option === item.options[selected ?? -1];
-                if (isCorrect) {
-                  icon = 'checkmark-circle';
-                  iconColor = colors.success;
-                  bg = withAlpha(colors.success, 0.1);
-                  borderColor = colors.success;
-                } else if (isSelectedOpt) {
-                  icon = 'close-circle';
-                  iconColor = colors.error;
-                  bg = withAlpha(colors.error, 0.08);
-                  borderColor = colors.error;
-                }
-              }
-              return (
-                <Pressable
-                  key={option}
-                  onPress={() => selectAnswer(option)}
-                  style={[styles.option, { backgroundColor: bg, borderColor }]}
-                >
-                  <Text style={styles.optionLabel}>{option}</Text>
-                  {icon && (
-                    <Ionicons name={icon} size={22} color={iconColor} />
-                  )}
-                </Pressable>
-              );
-            })}
-          </View>
-
-          {answered && (
-            <>
-              <View style={styles.spacer16} />
-              <Button
-                label={isLast ? 'Lihat Hasil' : 'Lanjut'}
-                icon={isLast ? 'trophy' : 'arrow-forward'}
-                variant="primary"
-                onPress={nextQuestion}
+      <View style={styles.footer}>
+        <View style={styles.centerColumn}>
+          <View style={styles.dots}>
+            {questions.map((_, index) => (
+              <Pressable
+                key={index}
+                hitSlop={6}
+                onPress={() => goToPage(index)}
+                style={[styles.dot, index === current && styles.dotActive]}
               />
-            </>
+            ))}
+          </View>
+          <View style={styles.spacer12} />
+          {isLast ? (
+            allAnswered ? (
+              <Button
+                label="Lihat Hasil"
+                icon="trophy"
+                variant="primary"
+                onPress={showResult}
+              />
+            ) : (
+              <Text style={styles.footerHint}>
+                Jawab semua soal dulu untuk melihat hasil
+              </Text>
+            )
+          ) : (
+            <Button
+              label="Lanjut"
+              icon="arrow-forward"
+              variant="primary"
+              onPress={() => goToPage(current + 1)}
+            />
           )}
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -335,13 +415,55 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.regular,
     color: colors.textSecondary,
   },
-  content: {
+  topBar: {
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.screen,
+    alignItems: 'center',
+  },
+  pager: {
+    flex: 1,
+  },
+  page: {
+    flex: 1,
+  },
+  pageContent: {
     padding: spacing.screen,
+    paddingTop: 0,
     alignItems: 'center',
   },
   centerColumn: {
     width: '100%',
     maxWidth: 480,
+  },
+  footer: {
+    paddingHorizontal: spacing.screen,
+    paddingBottom: spacing.screen,
+    paddingTop: 12,
+    alignItems: 'center',
+  },
+  dots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+    backgroundColor: colors.surfaceMuted,
+  },
+  dotActive: {
+    backgroundColor: colors.primary,
+    width: 20,
+  },
+  footerHint: {
+    fontSize: fontSize.label,
+    fontFamily: fontFamily.medium,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    paddingVertical: 16,
   },
   scoreBadge: {
     flexDirection: 'row',
@@ -360,10 +482,16 @@ const styles = StyleSheet.create({
   progressRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
   progressLabel: {
     fontSize: fontSize.label,
     fontFamily: fontFamily.medium,
+    color: colors.textSecondary,
+  },
+  progressHint: {
+    fontSize: fontSize.label,
+    fontFamily: fontFamily.regular,
     color: colors.textSecondary,
   },
   progressTrack: {
@@ -425,6 +553,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   spacer10: { height: 10 },
+  spacer12: { height: 12 },
   spacer16: { height: 16 },
   spacer24: { height: 24 },
 });
