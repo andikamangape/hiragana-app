@@ -31,10 +31,11 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "release:minor": "standard-version --release-as minor",
+  "release:major": "standard-version --release-as major"
   },
   "private": true,
-  "release": "standard-version",
-  "release:minor": "standard-version --release-as minor",
-  "release:major": "standard-version --release-as major"
+  "release": "standard-version"
+  
 }
