@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/andikamangape/hiragana-app/compare/v1.1.0...v1.2.0) (2026-11-03)
+
+
+### Features
+
+* swipe antar soal kuis pakai pager-view ([4d94ed0](https://github.com/andikamangape/hiragana-app/commit/4d94ed060674c8534d0f0c3632b09f7805080d4c))
+
 ## 1.1.0 (2026-11-03)
 
 
