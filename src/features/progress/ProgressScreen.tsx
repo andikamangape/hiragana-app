@@ -10,12 +10,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
 import { SegmentedToggle } from '../../components/SegmentedToggle';
-import { colors, radius, shadow, spacing, withAlpha } from '../../theme/theme';
+import { elevation, onGradient, radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { loadProgress, type ProgressData } from '../../data/progress';
 import type { KanaType } from '../../data/types';
@@ -30,6 +33,9 @@ type ProgressState =
 
 export function ProgressScreen() {
   const navigation = useNavigation<Nav>();
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [type, setType] = useState<KanaType>('hiragana');
   const [state, setState] = useState<ProgressState>({ status: 'loading' });
 
@@ -74,7 +80,12 @@ export function ProgressScreen() {
   return (
     <View style={styles.screen}>
       <AppHeader title="Kemajuan" onBack={() => navigation.goBack()} />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: spacing.screen + insets.bottom },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <SegmentedToggle
             value={type}
@@ -122,6 +133,8 @@ function ProgressBody({
   data: ProgressData;
   onStartWeakDrill: () => void;
 }) {
+  const { colors, gradients } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const accuracyPct =
     data.accuracy === null ? '-' : `${Math.round(data.accuracy * 100)}%`;
   const hasWeak = data.weakest.length > 0;
@@ -130,7 +143,7 @@ function ProgressBody({
     <>
       <FadeSlideIn style={styles.fullWidth}>
         <LinearGradient
-          colors={['#59785F', '#43604A']}
+          colors={[...gradients.primary]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={[styles.summaryCard, { borderRadius: radius.xl }]}
@@ -142,9 +155,13 @@ function ProgressBody({
             <SummaryStat
               label="Benar"
               value={`${data.right}`}
-              color="#BFE3C8"
+              color={onGradient.right}
             />
-            <SummaryStat label="Salah" value={`${data.wrong}`} color="#F3B7B3" />
+            <SummaryStat
+              label="Salah"
+              value={`${data.wrong}`}
+              color={onGradient.wrong}
+            />
             <SummaryStat
               label="Huruf dilatih"
               value={`${data.attemptedKana}/${data.totalKana}`}
@@ -241,6 +258,7 @@ function SummaryStat({
   value: string;
   color: string;
 }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.summaryStat}>
       <Text style={[styles.summaryStatValue, { color }]}>{value}</Text>
@@ -263,6 +281,8 @@ function KanaStatRow({
   index: number;
   tone: 'weak' | 'strong';
 }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const pct = item.accuracy === null ? '-' : `${Math.round(item.accuracy * 100)}%`;
   return (
     <View style={[styles.kanaStatRow, index > 0 && styles.kanaStatRowDivider]}>
@@ -297,7 +317,8 @@ function KanaStatRow({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -340,7 +361,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: fontSize.label,
     fontFamily: fontFamily.regular,
-    color: withAlpha('#FFFFFF', 0.85),
+    color: onGradient.muted,
   },
   summaryRow: {
     flexDirection: 'row',
@@ -358,7 +379,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: fontSize.caption,
     fontFamily: fontFamily.regular,
-    color: withAlpha('#FFFFFF', 0.75),
+    color: onGradient.subtle,
   },
   sectionTitle: {
     fontSize: fontSize.label,
@@ -372,7 +393,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     paddingHorizontal: 16,
-    ...shadow.card,
+    ...elevation.card,
   },
   rowBlock: {
     paddingVertical: 14,
@@ -464,4 +485,4 @@ const styles = StyleSheet.create({
   spacer12: { height: 12 },
   spacer16: { height: 16 },
   spacer24: { height: 24 },
-});
+  });

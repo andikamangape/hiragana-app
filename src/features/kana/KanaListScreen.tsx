@@ -8,7 +8,10 @@ import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
 import { SegmentedToggle } from '../../components/SegmentedToggle';
-import { colors, radius, shadow, spacing, withAlpha } from '../../theme/theme';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { elevation, minTapTarget, radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { kanaSource } from '../../data/kanaSource';
 import type { Kana, KanaType } from '../../data/types';
@@ -20,6 +23,8 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export function KanaListScreen() {
   const navigation = useNavigation<Nav>();
+  const insets = useSafeAreaInsets();
+  const styles = useThemedStyles(makeStyles);
   const [type, setType] = useState<KanaType>('hiragana');
   const [selected, setSelected] = useState<Kana | null>(null);
 
@@ -31,7 +36,12 @@ export function KanaListScreen() {
         title="Hiragana & Katakana"
         onBack={() => navigation.goBack()}
       />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: spacing.screen + insets.bottom },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <SegmentedToggle
             value={type}
@@ -79,6 +89,7 @@ export function KanaListScreen() {
 }
 
 function RowHeader({ row, count }: { row: string; count: number }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.rowHeader}>
       <Text style={styles.rowTitle}>Baris {row}</Text>
@@ -88,14 +99,22 @@ function RowHeader({ row, count }: { row: string; count: number }) {
 }
 
 function KanaCard({ kana, onOpen }: { kana: Kana; onOpen: () => void }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
-    <Pressable style={styles.kanaCard} onPress={onOpen}>
+    <Pressable
+      style={styles.kanaCard}
+      onPress={onOpen}
+      accessibilityRole="button"
+      accessibilityLabel={`${kana.character}, ${kana.romaji}`}
+    >
       <Text style={styles.kanaChar}>{kana.character}</Text>
       <Text style={styles.kanaRomaji}>{kana.romaji}</Text>
       <Pressable
         style={styles.audioButton}
-        hitSlop={6}
         onPress={() => kanaAudio.playRomaji(kana.romaji)}
+        accessibilityRole="button"
+        accessibilityLabel={`Putar audio ${kana.romaji}`}
       >
         <Ionicons name="volume-medium" size={16} color={colors.primary} />
       </Pressable>
@@ -112,7 +131,8 @@ function groupByRow(kanaList: Kana[]): [string, Kana[]][] {
   return Object.entries(result);
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -159,7 +179,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
-    ...shadow.card,
+    ...elevation.card,
   },
   kanaChar: {
     fontSize: 30,
@@ -175,15 +195,15 @@ const styles = StyleSheet.create({
   },
   audioButton: {
     position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    top: 2,
+    right: 2,
+    width: minTapTarget,
+    height: minTapTarget,
+    borderRadius: minTapTarget / 2,
     backgroundColor: withAlpha(colors.primary, 0.12),
     alignItems: 'center',
     justifyContent: 'center',
   },
   spacer8: { height: 8 },
   spacer24: { height: 24 },
-});
+  });

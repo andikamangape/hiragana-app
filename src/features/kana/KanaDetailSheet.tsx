@@ -1,9 +1,12 @@
 import React from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Button } from '../../components/Button';
-import { colors, radius, shadow, withAlpha } from '../../theme/theme';
+import { elevation, radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import type { Kana } from '../../data/types';
 import { kanaAudio } from '../../utils/kanaAudio';
@@ -14,6 +17,9 @@ interface KanaDetailSheetProps {
 }
 
 export function KanaDetailSheet({ kana, onClose }: KanaDetailSheetProps) {
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [failed, setFailed] = React.useState(false);
 
   const handlePlay = async () => {
@@ -29,11 +35,21 @@ export function KanaDetailSheet({ kana, onClose }: KanaDetailSheetProps) {
       animationType="slide"
       onRequestClose={onClose}
     >
-      <Pressable style={styles.backdrop} onPress={onClose}>
-        <Pressable style={[styles.sheet, shadow.card]} onPress={() => {}}>
+      <Pressable
+        style={styles.backdrop}
+        onPress={onClose}
+        accessibilityRole="button"
+        accessibilityLabel="Tutup detail huruf"
+      >
+        <Pressable style={[styles.sheet, elevation.raised]} onPress={() => {}}>
           <View style={styles.dragHandle} />
           {kana && (
-            <ScrollView contentContainerStyle={styles.content}>
+            <ScrollView
+              contentContainerStyle={[
+                styles.content,
+                { paddingBottom: spacing.screen + insets.bottom },
+              ]}
+            >
               <View style={styles.heroCard}>
                 <Text style={styles.heroChar}>{kana.character}</Text>
               </View>
@@ -76,6 +92,7 @@ export function KanaDetailSheet({ kana, onClose }: KanaDetailSheetProps) {
 }
 
 function Chip({ label }: { label: string }) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.chip}>
       <Text style={styles.chipLabel}>{label}</Text>
@@ -83,10 +100,11 @@ function Chip({ label }: { label: string }) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: colors.overlay,
     justifyContent: 'flex-end',
   },
   sheet: {
@@ -171,4 +189,4 @@ const styles = StyleSheet.create({
   },
   spacer8: { height: 8 },
   spacer24: { height: 24 },
-});
+  });

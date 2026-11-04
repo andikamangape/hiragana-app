@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { colors } from './src/theme/theme';
+import { ThemeProvider, useTheme } from './src/theme/ThemeProvider';
 import { HomeScreen } from './src/features/home/HomeScreen';
 import { KanaListScreen } from './src/features/kana/KanaListScreen';
 import { ProgressScreen } from './src/features/progress/ProgressScreen';
@@ -22,17 +22,38 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: colors.background,
-    card: colors.surface,
-    text: colors.textPrimary,
-    border: colors.border,
-    primary: colors.primary,
-  },
-};
+function RootNavigator() {
+  const { colors, isDark } = useTheme();
+
+  const navTheme = {
+    ...(isDark ? DarkTheme : DefaultTheme),
+    colors: {
+      ...(isDark ? DarkTheme : DefaultTheme).colors,
+      background: colors.background,
+      card: colors.surface,
+      text: colors.textPrimary,
+      border: colors.border,
+      primary: colors.primary,
+    },
+  };
+
+  return (
+    <NavigationContainer theme={navTheme}>
+      <StatusBar style={isDark ? 'light' : 'dark'} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="KanaList" component={KanaListScreen} />
+        <Stack.Screen name="Progress" component={ProgressScreen} />
+        <Stack.Screen name="QuizSetup" component={QuizSetupScreen} />
+        <Stack.Screen name="Quiz" component={QuizScreen} />
+        <Stack.Screen name="QuizResult" component={QuizResultScreen} />
+        <Stack.Screen name="StoryList" component={StoryListScreen} />
+        <Stack.Screen name="Story" component={StoryScreen} />
+        <Stack.Screen name="StoryResult" component={StoryResultScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 export default function App() {
   const [loaded, error] = useFonts({
@@ -55,20 +76,9 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer theme={navTheme}>
-        <StatusBar style="dark" />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="KanaList" component={KanaListScreen} />
-          <Stack.Screen name="Progress" component={ProgressScreen} />
-          <Stack.Screen name="QuizSetup" component={QuizSetupScreen} />
-          <Stack.Screen name="Quiz" component={QuizScreen} />
-          <Stack.Screen name="QuizResult" component={QuizResultScreen} />
-          <Stack.Screen name="StoryList" component={StoryListScreen} />
-          <Stack.Screen name="Story" component={StoryScreen} />
-          <Stack.Screen name="StoryResult" component={StoryResultScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ThemeProvider>
+        <RootNavigator />
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }

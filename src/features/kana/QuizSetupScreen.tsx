@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Pressable,
   ScrollView,
@@ -10,67 +10,95 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import PagerView from 'react-native-pager-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
-import { SegmentedToggle } from '../../components/SegmentedToggle';
-import { colors, radius, shadow, spacing, withAlpha } from '../../theme/theme';
+import { elevation, radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { kanaSource } from '../../data/kanaSource';
-import type { KanaType } from '../../data/types';
+import type { Kana, KanaType } from '../../data/types';
 import type { RootStackParamList } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 const PRESETS = [5, 10, 15, 20];
 
+const TYPES: KanaType[] = ['hiragana', 'katakana'];
+const TYPE_INFO: Record<KanaType, { title: string; sample: string; subtitle: string }> = {
+  hiragana: { title: 'Hiragana', sample: 'あ', subtitle: 'Huruf dasar Jepang' },
+  katakana: { title: 'Katakana', sample: 'ア', subtitle: 'Untuk kata serapan' },
+};
+
+function rowsOf(kanaList: Kana[]): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const k of kanaList) {
+    if (!seen.has(k.row)) {
+      seen.add(k.row);
+      result.push(k.row);
+    }
+  }
+  return result;
+}
+
 export function QuizSetupScreen() {
   const navigation = useNavigation<Nav>();
-  const [type, setType] = useState<KanaType>('hiragana');
-  const [count, setCount] = useState('10');
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+  const pagerRef = useRef<PagerView>(null);
+
+  const [page, setPage] = useState(0);
+  const [countByType, setCountByType] = useState<Record<KanaType, string>>({
+    hiragana: '10',
+    katakana: '10',
+  });
   const [error, setError] = useState<string | null>(null);
-  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [rowsByType, setRowsByType] = useState<Record<KanaType, string[]>>({
+    hiragana: [],
+    katakana: [],
+  });
 
-  const kanaList = useMemo(() => kanaSource.getKana(type), [type]);
-  const maxKana = kanaList.length;
-  const rows = useMemo(() => {
-    const seen = new Set<string>();
-    const result: string[] = [];
-    for (const k of kanaList) {
-      if (!seen.has(k.row)) {
-        seen.add(k.row);
-        result.push(k.row);
-      }
-    }
-    return result;
-  }, [kanaList]);
-
-  const selectedKanaCount = useMemo(
-    () =>
-      selectedRows.length === 0
-        ? maxKana
-        : kanaList.filter((k) => selectedRows.includes(k.row)).length,
-    [kanaList, selectedRows, maxKana],
-  );
-
-  const changeType = (next: KanaType) => {
-    setType(next);
-    setSelectedRows([]);
+  const switchPage = (index: number) => {
+    setPage(index);
     setError(null);
   };
 
-  const toggleRow = (row: string) => {
-    setError(null);
-    setSelectedRows((prev) =>
-      prev.includes(row)
-        ? prev.filter((r) => r !== row)
-        : [...prev, row],
-    );
+  const goToPage = (index: number) => {
+    pagerRef.current?.setPage(index);
+    switchPage(index);
   };
 
-  const startQuiz = () => {
-    const value = parseInt(count.trim(), 10);
+  const toggleRow = (type: KanaType, row: string) => {
+    setError(null);
+    setRowsByType((prev) => {
+      const current = prev[type];
+      const next = current.includes(row)
+        ? current.filter((r) => r !== row)
+        : [...current, row];
+      return { ...prev, [type]: next };
+    });
+  };
+
+  const dataFor = (type: KanaType) => {
+    const kanaList = kanaSource.getKana(type);
+    const max = kanaList.length;
+    const selected = rowsByType[type];
+    const selectedKanaCount =
+      selected.length === 0
+        ? max
+        : kanaList.filter((k) => selected.includes(k.row)).length;
+    return { rows: rowsOf(kanaList), max, selected, selectedKanaCount };
+  };
+
+  const startQuizFor = (type: KanaType) => {
+    const { selectedKanaCount } = dataFor(type);
+    const value = parseInt(countByType[type].trim(), 10);
     if (Number.isNaN(value) || value < 1) {
       setError('Masukkan angka minimal 1');
       return;
@@ -83,15 +111,15 @@ export function QuizSetupScreen() {
     navigation.navigate('Quiz', {
       totalQuestions: value,
       kanaType: type,
-      rows: selectedRows.length > 0 ? selectedRows : undefined,
+      rows: rowsByType[type].length > 0 ? rowsByType[type] : undefined,
     });
   };
 
-  const startRowQuiz = (row: string) => {
+  const startRowQuiz = (type: KanaType, row: string) => {
     navigation.navigate('Quiz', { totalQuestions: 5, kanaType: type, row });
   };
 
-  const startWeakDrill = () => {
+  const startWeakDrill = (type: KanaType) => {
     navigation.navigate('Quiz', {
       totalQuestions: 10,
       kanaType: type,
@@ -99,195 +127,275 @@ export function QuizSetupScreen() {
     });
   };
 
-  return (
-    <View style={styles.screen}>
-      <AppHeader title="Atur Kuis" onBack={() => navigation.goBack()} />
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.centerColumn}>
-          <FadeSlideIn style={styles.fullWidth}>
-            <SegmentedToggle
-              value={type}
-              onChange={changeType}
-              options={[
-                { value: 'hiragana', label: 'Hiragana' },
-                { value: 'katakana', label: 'Katakana' },
-              ]}
-            />
-          </FadeSlideIn>
+  const renderPage = (type: KanaType) => {
+    const info = TYPE_INFO[type];
+    const { rows, max, selected, selectedKanaCount } = dataFor(type);
+    const count = countByType[type];
+    const setCount = (value: string) =>
+      setCountByType((prev) => ({ ...prev, [type]: value }));
 
-          <View style={styles.spacer24} />
+    return (
+      <View key={type} style={styles.page} collapsable={false}>
+        <ScrollView
+          contentContainerStyle={[
+            styles.pageContent,
+            { paddingBottom: spacing.screen + insets.bottom },
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          <View style={styles.centerColumn}>
+            <View style={styles.typeHero}>
+              <Text style={styles.typeSample}>{info.sample}</Text>
+              <Text style={styles.typeTitle}>{info.title}</Text>
+              <Text style={styles.typeSubtitle}>
+                {info.subtitle} · {max} kana
+              </Text>
+            </View>
 
-          <FadeSlideIn delay={80} style={styles.fullWidth}>
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Pilih beberapa baris</Text>
+            <View style={styles.spacer24} />
+
+            <FadeSlideIn delay={80} style={styles.fullWidth}>
+              <View style={styles.card}>
+                <Text style={styles.sectionTitle}>Pilih beberapa baris</Text>
+                <View style={styles.spacer4} />
+                <Text style={styles.sectionSubtitle}>
+                  Centang baris yang mau dikerjakan, lalu mulai
+                </Text>
+                <View style={styles.spacer12} />
+                <View style={styles.rowChips}>
+                  {rows.map((row) => {
+                    const active = selected.includes(row);
+                    return (
+                      <Pressable
+                        key={row}
+                        style={[styles.rowChip, active && styles.rowChipActive]}
+                        onPress={() => toggleRow(type, row)}
+                      >
+                        <Ionicons
+                          name={active ? 'checkmark-circle' : 'ellipse-outline'}
+                          size={15}
+                          color={active ? colors.primary : colors.textSecondary}
+                        />
+                        <Text
+                          style={[
+                            styles.rowChipLabel,
+                            active && styles.rowChipLabelActive,
+                          ]}
+                        >
+                          Baris {row}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+                <View style={styles.spacer12} />
+                <Button
+                  label="Mulai Kuis Baris Terpilih"
+                  icon="layers"
+                  variant="primary"
+                  disabled={selected.length === 0}
+                  onPress={() => startQuizFor(type)}
+                />
+              </View>
+            </FadeSlideIn>
+
+            <View style={styles.spacer24} />
+
+            <FadeSlideIn delay={160} style={styles.fullWidth}>
+              <View style={styles.card}>
+                <Text style={styles.sectionTitle}>Jumlah soal</Text>
+                <View style={styles.spacer4} />
+                <Text style={styles.sectionSubtitle}>
+                  Maksimal {selectedKanaCount} soal tersedia
+                </Text>
+                <View style={styles.spacer12} />
+                <TextInput
+                  value={count}
+                  onChangeText={setCount}
+                  keyboardType="number-pad"
+                  maxLength={2}
+                  style={styles.input}
+                  placeholder={`1 - ${selectedKanaCount}`}
+                  placeholderTextColor={colors.textSecondary}
+                  onSubmitEditing={() => startQuizFor(type)}
+                />
+                <View style={styles.spacer12} />
+                <View style={styles.presetRow}>
+                  {PRESETS.map((n) => {
+                    const disabled = n > selectedKanaCount;
+                    const active = count === `${n}`;
+                    return (
+                      <Pressable
+                        key={n}
+                        disabled={disabled}
+                        onPress={() => setCount(`${n}`)}
+                        style={[
+                          styles.preset,
+                          active && styles.presetActive,
+                          disabled && styles.presetDisabled,
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.presetLabel,
+                            active && styles.presetLabelActive,
+                            disabled && styles.presetLabelDisabled,
+                          ]}
+                        >
+                          {n}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+                {error && <Text style={styles.errorText}>{error}</Text>}
+              </View>
+            </FadeSlideIn>
+
+            <View style={styles.spacer24} />
+
+            <FadeSlideIn delay={160} style={styles.fullWidth}>
+              <Button
+                label="Mulai Kuis"
+                icon="play"
+                variant="primary"
+                onPress={() => startQuizFor(type)}
+              />
+            </FadeSlideIn>
+
+            <View style={styles.spacer24} />
+
+            <FadeSlideIn delay={240} style={styles.fullWidth}>
+              <Text style={styles.groupTitle}>Latihan satu baris</Text>
               <View style={styles.spacer4} />
-              <Text style={styles.sectionSubtitle}>
-                Centang baris yang mau dikerjakan, lalu mulai
+              <Text style={styles.groupSubtitle}>
+                5 soal dari satu baris, urutan acak
               </Text>
               <View style={styles.spacer12} />
               <View style={styles.rowChips}>
-                {rows.map((row) => {
-                  const active = selectedRows.includes(row);
-                  return (
-                    <Pressable
-                      key={row}
-                      style={[styles.rowChip, active && styles.rowChipActive]}
-                      onPress={() => toggleRow(row)}
-                    >
-                      <Ionicons
-                        name={active ? 'checkmark-circle' : 'ellipse-outline'}
-                        size={15}
-                        color={active ? colors.primary : colors.textSecondary}
-                      />
-                      <Text
-                        style={[
-                          styles.rowChipLabel,
-                          active && styles.rowChipLabelActive,
-                        ]}
-                      >
-                        Baris {row}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
+                {rows.map((row) => (
+                  <Pressable
+                    key={row}
+                    style={styles.rowChip}
+                    onPress={() => startRowQuiz(type, row)}
+                  >
+                    <Ionicons
+                      name="layers"
+                      size={15}
+                      color={colors.textSecondary}
+                    />
+                    <Text style={styles.rowChipLabel}>Baris {row}</Text>
+                  </Pressable>
+                ))}
               </View>
-              <View style={styles.spacer12} />
-              <Button
-                label="Mulai Kuis Baris Terpilih"
-                icon="layers"
-                variant="primary"
-                disabled={selectedRows.length === 0}
-                onPress={startQuiz}
-              />
-            </View>
-          </FadeSlideIn>
+            </FadeSlideIn>
 
-          <View style={styles.spacer24} />
+            <View style={styles.spacer24} />
 
-          <FadeSlideIn delay={160} style={styles.fullWidth}>
-            <View style={styles.card}>
-              <Text style={styles.sectionTitle}>Jumlah soal</Text>
-              <View style={styles.spacer4} />
-              <Text style={styles.sectionSubtitle}>
-                Maksimal {selectedKanaCount} soal tersedia
-              </Text>
-              <View style={styles.spacer12} />
-              <TextInput
-                value={count}
-                onChangeText={setCount}
-                keyboardType="number-pad"
-                maxLength={2}
-                style={styles.input}
-                placeholder={`1 - ${selectedKanaCount}`}
-                placeholderTextColor={colors.textSecondary}
-                onSubmitEditing={startQuiz}
-              />
-              <View style={styles.spacer12} />
-              <View style={styles.presetRow}>
-                {PRESETS.map((n) => {
-                  const disabled = n > selectedKanaCount;
-                  const active = count === `${n}`;
-                  return (
-                    <Pressable
-                      key={n}
-                      disabled={disabled}
-                      onPress={() => setCount(`${n}`)}
-                      style={[
-                        styles.preset,
-                        active && styles.presetActive,
-                        disabled && styles.presetDisabled,
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.presetLabel,
-                          active && styles.presetLabelActive,
-                          disabled && styles.presetLabelDisabled,
-                        ]}
-                      >
-                        {n}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
-              {error && <Text style={styles.errorText}>{error}</Text>}
-            </View>
-          </FadeSlideIn>
-
-          <View style={styles.spacer24} />
-
-          <FadeSlideIn delay={160} style={styles.fullWidth}>
-            <Button
-              label="Mulai Kuis"
-              icon="play"
-              variant="primary"
-              onPress={startQuiz}
-            />
-          </FadeSlideIn>
-
-          <View style={styles.spacer24} />
-
-          <FadeSlideIn delay={240} style={styles.fullWidth}>
-            <Text style={styles.groupTitle}>Latihan satu baris</Text>
-            <View style={styles.spacer4} />
-            <Text style={styles.groupSubtitle}>
-              5 soal dari satu baris, urutan acak
-            </Text>
-            <View style={styles.spacer12} />
-            <View style={styles.rowChips}>
-              {rows.map((row) => (
-                <Pressable
-                  key={row}
-                  style={styles.rowChip}
-                  onPress={() => startRowQuiz(row)}
-                >
-                  <Ionicons
-                    name="layers"
-                    size={15}
-                    color={colors.textSecondary}
-                  />
-                  <Text style={styles.rowChipLabel}>Baris {row}</Text>
-                </Pressable>
-              ))}
-            </View>
-          </FadeSlideIn>
-
-          <View style={styles.spacer24} />
-
-          <FadeSlideIn delay={320} style={styles.fullWidth}>
-            <View style={styles.weakCard}>
-              <View style={styles.weakHeader}>
-                <Ionicons name="flame" size={22} color={colors.accent} />
-                <View style={styles.weakText}>
-                  <Text style={styles.weakTitle}>Fokus huruf lemah</Text>
-                  <Text style={styles.weakSubtitle}>
-                    Kuis dari huruf yang paling sering kamu salah
-                  </Text>
+            <FadeSlideIn delay={320} style={styles.fullWidth}>
+              <View style={styles.weakCard}>
+                <View style={styles.weakHeader}>
+                  <Ionicons name="flame" size={22} color={colors.accent} />
+                  <View style={styles.weakText}>
+                    <Text style={styles.weakTitle}>Fokus huruf lemah</Text>
+                    <Text style={styles.weakSubtitle}>
+                      Kuis dari huruf yang paling sering kamu salah
+                    </Text>
+                  </View>
                 </View>
+                <View style={styles.spacer12} />
+                <Button
+                  label="Latihan Huruf Lemah"
+                  icon="flame"
+                  variant="accent"
+                  onPress={() => startWeakDrill(type)}
+                />
               </View>
-              <View style={styles.spacer12} />
-              <Button
-                label="Latihan Huruf Lemah"
-                icon="flame"
-                variant="accent"
-                onPress={startWeakDrill}
+            </FadeSlideIn>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  };
+
+  return (
+    <View style={styles.screen}>
+      <AppHeader title="Atur Kuis" onBack={() => navigation.goBack()} />
+
+      <View style={styles.topBar}>
+        <View style={styles.topBarInner}>
+          <Text style={styles.topHint}>Geser untuk ganti tipe</Text>
+          <View style={styles.dots}>
+            {TYPES.map((type, index) => (
+              <Pressable
+                key={type}
+                hitSlop={8}
+                onPress={() => goToPage(index)}
+                style={[styles.dot, index === page && styles.dotActive]}
               />
-            </View>
-          </FadeSlideIn>
+            ))}
+          </View>
         </View>
-      </ScrollView>
+      </View>
+
+      <PagerView
+        ref={pagerRef}
+        style={styles.pager}
+        initialPage={0}
+        onPageSelected={(e) => switchPage(e.nativeEvent.position)}
+      >
+        {TYPES.map(renderPage)}
+      </PagerView>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
   },
-  content: {
-    paddingVertical: 24,
+  topBar: {
+    paddingHorizontal: spacing.screen,
+    paddingTop: spacing.screen,
+    paddingBottom: 12,
+    alignItems: 'center',
+  },
+  topBarInner: {
+    width: '100%',
+    maxWidth: 480,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  topHint: {
+    fontSize: fontSize.label,
+    fontFamily: fontFamily.medium,
+    color: colors.textSecondary,
+  },
+  dots: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: colors.surfaceMuted,
+  },
+  dotActive: {
+    backgroundColor: colors.primary,
+    width: 22,
+  },
+  pager: {
+    flex: 1,
+  },
+  page: {
+    flex: 1,
+  },
+  pageContent: {
+    paddingBottom: 40,
     paddingHorizontal: spacing.screen,
     alignItems: 'center',
   },
@@ -298,13 +406,41 @@ const styles = StyleSheet.create({
   fullWidth: {
     width: '100%',
   },
+  typeHero: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 28,
+    marginTop: 12,
+    alignItems: 'center',
+    ...elevation.card,
+  },
+  typeSample: {
+    fontSize: 72,
+    lineHeight: 88,
+    fontFamily: fontFamily.kana,
+    color: colors.primary,
+  },
+  typeTitle: {
+    fontSize: fontSize.title,
+    fontFamily: fontFamily.semibold,
+    color: colors.textPrimary,
+    marginTop: 4,
+  },
+  typeSubtitle: {
+    fontSize: fontSize.label,
+    fontFamily: fontFamily.regular,
+    color: colors.textSecondary,
+    marginTop: 4,
+  },
   card: {
     backgroundColor: colors.surface,
     borderRadius: radius.card,
     borderWidth: 1,
     borderColor: colors.border,
     padding: 20,
-    ...shadow.card,
+    ...elevation.card,
   },
   sectionTitle: {
     fontSize: fontSize.title,
@@ -409,7 +545,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: withAlpha(colors.accent, 0.3),
     padding: 20,
-    ...shadow.card,
+    ...elevation.card,
   },
   weakHeader: {
     flexDirection: 'row',
@@ -433,4 +569,4 @@ const styles = StyleSheet.create({
   spacer4: { height: 4 },
   spacer12: { height: 12 },
   spacer24: { height: 24 },
-});
+  });

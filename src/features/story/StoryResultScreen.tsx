@@ -5,11 +5,14 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
-import { colors, radius, spacing, withAlpha } from '../../theme/theme';
+import { onGradient, radius, spacing, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { storySource } from '../../data/storySource';
 import type { RootStackParamList } from '../../navigation/types';
@@ -26,6 +29,9 @@ function messageFor(ratio: number, perfect: boolean): string {
 export function StoryResultScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<ResultRoute>();
+  const insets = useSafeAreaInsets();
+  const { colors, gradients } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { storyId, correct, total, wrong } = route.params;
 
   const story = storySource.getStory(storyId);
@@ -36,11 +42,16 @@ export function StoryResultScreen() {
   return (
     <View style={styles.screen}>
       <AppHeader title="Hasil Cerita" />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: spacing.screen + insets.bottom },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <FadeSlideIn style={styles.fullWidth}>
             <LinearGradient
-              colors={['#59785F', '#43604A']}
+              colors={[...gradients.primary]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={[styles.hero, { borderRadius: radius.xl }]}
@@ -135,7 +146,8 @@ export function StoryResultScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -164,13 +176,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontSize: fontSize.body,
     fontFamily: fontFamily.medium,
-    color: withAlpha('#FFFFFF', 0.9),
+    color: onGradient.muted,
   },
   heroMsg: {
     marginTop: 12,
     fontSize: fontSize.body,
     fontFamily: fontFamily.regular,
-    color: withAlpha('#FFFFFF', 0.85),
+    color: onGradient.muted,
     textAlign: 'center',
   },
   sectionTitle: {
@@ -233,4 +245,4 @@ const styles = StyleSheet.create({
   },
   spacer12: { height: 12 },
   spacer24: { height: 24 },
-});
+  });

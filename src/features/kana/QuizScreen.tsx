@@ -12,16 +12,18 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
 import PagerView from 'react-native-pager-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
-import { colors, radius, spacing, withAlpha } from '../../theme/theme';
+import { radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { kanaSource } from '../../data/kanaSource';
 import { srsWeight, type Kana, type LetterStat } from '../../data/types';
 import { letterKey } from '../../data/types';
 import { statsStore } from '../../data/statsStore';
-import { kanaAudio } from '../../utils/kanaAudio';
 import type { RootStackParamList, QuizWrongItem } from '../../navigation/types';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
@@ -86,6 +88,9 @@ const emptyAnswer = (): Answer => ({
 export function QuizScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<QuizRoute>();
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { totalQuestions, kanaType, row, rows, mode } = route.params;
 
   const pagerRef = React.useRef<PagerView>(null);
@@ -243,24 +248,15 @@ export function QuizScreen() {
     return (
       <View key={item.kana.character + index} style={styles.page}>
         <ScrollView
-          contentContainerStyle={styles.pageContent}
+          contentContainerStyle={[
+            styles.pageContent,
+            { paddingBottom: spacing.screen + insets.bottom },
+          ]}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.centerColumn}>
             <View style={styles.questionCard}>
               <Text style={styles.questionChar}>{item.kana.character}</Text>
-              <Pressable
-                style={styles.listenButton}
-                hitSlop={8}
-                onPress={() => kanaAudio.playRomaji(item.kana.romaji)}
-              >
-                <Ionicons
-                  name="volume-medium"
-                  size={18}
-                  color={colors.primary}
-                />
-                <Text style={styles.listenLabel}>{item.kana.romaji}</Text>
-              </Pressable>
             </View>
 
             <View style={styles.spacer24} />
@@ -289,6 +285,8 @@ export function QuizScreen() {
                   <Pressable
                     key={option}
                     onPress={() => selectAnswer(index, option)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Jawaban ${option}`}
                     style={[styles.option, { backgroundColor: bg, borderColor }]}
                   >
                     <Text style={styles.optionLabel}>{option}</Text>
@@ -346,7 +344,12 @@ export function QuizScreen() {
         {questions.map(renderPage)}
       </PagerView>
 
-      <View style={styles.footer}>
+      <View
+        style={[
+          styles.footer,
+          { paddingBottom: Math.max(insets.bottom, spacing.md) },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <View style={styles.dots}>
             {questions.map((_, index) => (
@@ -354,6 +357,9 @@ export function QuizScreen() {
                 key={index}
                 hitSlop={6}
                 onPress={() => goToPage(index)}
+                accessibilityRole="button"
+                accessibilityLabel={`Ke soal ${index + 1}`}
+                accessibilityState={{ selected: index === current }}
                 style={[styles.dot, index === current && styles.dotActive]}
               />
             ))}
@@ -386,7 +392,8 @@ export function QuizScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -520,21 +527,6 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily.kana,
     color: colors.textPrimary,
   },
-  listenButton: {
-    marginTop: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: radius.pill,
-    backgroundColor: withAlpha(colors.primary, 0.1),
-  },
-  listenLabel: {
-    fontSize: fontSize.body,
-    fontFamily: fontFamily.semibold,
-    color: colors.primary,
-  },
   options: {
     gap: 12,
   },
@@ -556,4 +548,4 @@ const styles = StyleSheet.create({
   spacer12: { height: 12 },
   spacer16: { height: 16 },
   spacer24: { height: 24 },
-});
+  });

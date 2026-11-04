@@ -11,11 +11,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RouteProp } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
-import { colors, radius, shadow, spacing, withAlpha } from '../../theme/theme';
+import { elevation, radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { storySource } from '../../data/storySource';
 import { storyStore } from '../../data/storyStore';
@@ -41,6 +44,9 @@ function shuffle<T>(array: T[]): T[] {
 export function StoryScreen() {
   const navigation = useNavigation<Nav>();
   const route = useRoute<StoryRoute>();
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const { storyId } = route.params;
   const story = useMemo(() => storySource.getStory(storyId), [storyId]);
 
@@ -153,7 +159,12 @@ export function StoryScreen() {
           </View>
         }
       />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: spacing.screen + insets.bottom },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <View style={styles.storyCard}>
             {story.sentences.map((sentence, index) => (
@@ -173,8 +184,10 @@ export function StoryScreen() {
               <Switch
                 value={romajiOn}
                 onValueChange={setRomajiOn}
+                accessibilityLabel="Tampilkan romaji"
                 trackColor={{ true: colors.primary, false: colors.border }}
-                thumbColor="#FFFFFF"
+                thumbColor={colors.surface}
+                ios_backgroundColor={colors.border}
               />
             </View>
           </View>
@@ -200,6 +213,8 @@ export function StoryScreen() {
                   <Pressable
                     key={tile.id}
                     onPress={() => returnToBank(tile)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Kembalikan kana ${tile.char}`}
                     style={[
                       styles.tile,
                       answered &&
@@ -227,6 +242,8 @@ export function StoryScreen() {
                 <Pressable
                   key={tile.id}
                   onPress={() => pickFromBank(tile)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Pilih kana ${tile.char}`}
                   style={styles.tile}
                 >
                   <Text style={styles.tileChar}>{tile.char}</Text>
@@ -263,7 +280,8 @@ export function StoryScreen() {
 
 const TILE = 52;
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -312,7 +330,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     padding: 20,
-    ...shadow.card,
+    ...elevation.card,
   },
   sentenceBlock: {},
   sentenceGap: {
@@ -356,7 +374,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     padding: 20,
-    ...shadow.card,
+    ...elevation.card,
   },
   questionMeta: {
     fontSize: fontSize.caption,
@@ -401,7 +419,7 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     alignItems: 'center',
     justifyContent: 'center',
-    ...shadow.card,
+    ...elevation.card,
   },
   tileOk: {
     backgroundColor: withAlpha(colors.success, 0.14),
@@ -424,4 +442,4 @@ const styles = StyleSheet.create({
   },
   spacer16: { height: 16 },
   spacer24: { height: 24 },
-});
+  });

@@ -10,12 +10,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { Button } from '../../components/Button';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
 import { ScaleTapCard } from '../../components/ScaleTapCard';
-import { colors, radius, shadow, spacing, withAlpha } from '../../theme/theme';
+import { elevation, radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { loadStatsSummary, type QuizStatsSummary } from '../../data/statsStore';
 import type { RootStackParamList } from '../../navigation/types';
@@ -29,6 +32,9 @@ type StatsState =
 
 export function HomeScreen() {
   const navigation = useNavigation<Nav>();
+  const insets = useSafeAreaInsets();
+  const { gradients } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [stats, setStats] = useState<StatsState>({ status: 'loading' });
 
   const refresh = useCallback(() => {
@@ -56,11 +62,16 @@ export function HomeScreen() {
   return (
     <View style={styles.screen}>
       <AppHeader title="Hiragana App" />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: spacing.block + insets.bottom },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <FadeSlideIn style={styles.fullWidth}>
             <LinearGradient
-              colors={['#59785F', '#43604A']}
+              colors={[...gradients.primary]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={[styles.hero, { borderRadius: radius.xl }]}
@@ -139,8 +150,14 @@ function MenuCard({
   icon: keyof typeof Ionicons.glyphMap;
   onPress: () => void;
 }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
-    <ScaleTapCard onPress={onPress} contentStyle={styles.menuContent}>
+    <ScaleTapCard
+      onPress={onPress}
+      contentStyle={styles.menuContent}
+      accessibilityLabel={`${title}. ${subtitle}`}
+    >
       <View style={styles.menuRow}>
         <View style={styles.menuIcon}>
           <Ionicons name={icon} size={24} color={colors.primary} />
@@ -156,6 +173,9 @@ function MenuCard({
 }
 
 function StatsCard({ state }: { state: StatsState }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+
   if (state.status === 'loading') {
     return (
       <View style={styles.statsCard}>
@@ -240,6 +260,8 @@ function StatRow({
   label: string;
   value: string;
 }) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.statRow}>
       <Ionicons name={icon} size={20} color={colors.textSecondary} />
@@ -250,7 +272,8 @@ function StatRow({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -287,7 +310,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: fontSize.body,
     fontFamily: fontFamily.regular,
-    color: withAlpha('#FFFFFF', 0.85),
+    color: withAlpha(colors.onPrimary, 0.85),
     textAlign: 'center',
   },
   menuContent: {
@@ -326,7 +349,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     padding: 20,
-    ...shadow.card,
+    ...elevation.card,
   },
   statsTitle: {
     fontSize: fontSize.label,
@@ -355,4 +378,4 @@ const styles = StyleSheet.create({
   spacer12: { height: 12 },
   spacer16: { height: 16 },
   spacer24: { height: 24 },
-});
+  });

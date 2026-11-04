@@ -9,7 +9,9 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 
-import { colors, radius, shadow, spacing, withAlpha } from '../theme/theme';
+import { radius, spacing, withAlpha, minTapTarget, type Palette } from '../theme/theme';
+import { useThemedStyles } from '../theme/useThemedStyles';
+import { useTheme } from '../theme/ThemeProvider';
 import { fontFamily } from '../theme/typography';
 
 type Variant = 'primary' | 'accent' | 'outline' | 'ghost';
@@ -24,6 +26,8 @@ interface ButtonProps {
   style?: StyleProp<ViewStyle>;
 }
 
+const HEIGHT = 52;
+
 export function Button({
   label,
   onPress,
@@ -32,22 +36,33 @@ export function Button({
   disabled = false,
   style,
 }: ButtonProps) {
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
+
   if (variant === 'primary' || variant === 'accent') {
-    const stops = variant === 'accent' ? colors.accent : colors.primary;
+    const isAccent = variant === 'accent';
+    const base = isAccent ? colors.accent : colors.primary;
+    const labelColor = isAccent ? colors.onAccent : colors.onPrimary;
+    const stops: [string, string] = [withAlpha(base, 1), withAlpha(base, 0.85)];
     return (
       <Pressable
         onPress={onPress}
         disabled={disabled}
-        style={[styles.pressable, shadow.card, style, disabled && styles.disabled]}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityState={{ disabled }}
+        style={[styles.pressable, styles.card, style, disabled && styles.disabled]}
       >
         <LinearGradient
-          colors={[withAlpha(stops, 1), withAlpha(stops, 0.85)]}
+          colors={stops}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.gradient}
         >
-          {icon && <Ionicons name={icon} size={18} color={colors.onPrimary} />}
-          <Text style={styles.primaryLabel}>{label}</Text>
+          {icon && <Ionicons name={icon} size={18} color={labelColor} />}
+          <Text style={[styles.primaryLabel, { color: labelColor }]}>
+            {label}
+          </Text>
         </LinearGradient>
       </Pressable>
     );
@@ -58,6 +73,9 @@ export function Button({
     <Pressable
       onPress={onPress}
       disabled={disabled}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityState={{ disabled }}
       style={[
         styles.plain,
         outline ? styles.outline : styles.ghost,
@@ -79,54 +97,61 @@ export function Button({
   );
 }
 
-const HEIGHT = 52;
-
-const styles = StyleSheet.create({
-  pressable: {
-    borderRadius: radius.input,
-  },
-  gradient: {
-    height: HEIGHT,
-    borderRadius: radius.input,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingHorizontal: spacing.screen,
-  },
-  primaryLabel: {
-    color: colors.onPrimary,
-    fontSize: 15,
-    fontFamily: fontFamily.semibold,
-  },
-  plain: {
-    height: HEIGHT,
-    borderRadius: radius.input,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    paddingHorizontal: spacing.screen,
-  },
-  outline: {
-    borderWidth: 1.5,
-    borderColor: colors.primary,
-    backgroundColor: withAlpha(colors.primary, 0.08),
-  },
-  ghost: {
-    backgroundColor: withAlpha(colors.textSecondary, 0.06),
-  },
-  outlineLabel: {
-    color: colors.primary,
-    fontSize: 15,
-    fontFamily: fontFamily.semibold,
-  },
-  ghostLabel: {
-    color: colors.textSecondary,
-    fontSize: 15,
-    fontFamily: fontFamily.medium,
-  },
-  disabled: {
-    opacity: 0.45,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    pressable: {
+      borderRadius: radius.input,
+    },
+    card: {
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.06,
+      shadowRadius: 16,
+      elevation: 2,
+    },
+    gradient: {
+      height: HEIGHT,
+      minHeight: minTapTarget,
+      borderRadius: radius.input,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.sm,
+      paddingHorizontal: spacing.screen,
+    },
+    primaryLabel: {
+      fontSize: 15,
+      fontFamily: fontFamily.semibold,
+    },
+    plain: {
+      height: HEIGHT,
+      minHeight: minTapTarget,
+      borderRadius: radius.input,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: spacing.sm,
+      paddingHorizontal: spacing.screen,
+    },
+    outline: {
+      borderWidth: 1.5,
+      borderColor: colors.primary,
+      backgroundColor: withAlpha(colors.primary, 0.08),
+    },
+    ghost: {
+      backgroundColor: withAlpha(colors.textSecondary, 0.06),
+    },
+    outlineLabel: {
+      color: colors.primary,
+      fontSize: 15,
+      fontFamily: fontFamily.semibold,
+    },
+    ghostLabel: {
+      color: colors.textSecondary,
+      fontSize: 15,
+      fontFamily: fontFamily.medium,
+    },
+    disabled: {
+      opacity: 0.45,
+    },
+  });

@@ -3,11 +3,14 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '../../components/AppHeader';
 import { FadeSlideIn } from '../../components/FadeSlideIn';
 import { ScaleTapCard } from '../../components/ScaleTapCard';
-import { colors, radius, spacing, withAlpha } from '../../theme/theme';
+import { radius, spacing, withAlpha, type Palette } from '../../theme/theme';
+import { useThemedStyles } from '../../theme/useThemedStyles';
+import { useTheme } from '../../theme/ThemeProvider';
 import { fontFamily, fontSize } from '../../theme/typography';
 import { storySource } from '../../data/storySource';
 import { getStoryStats, type StoryStat } from '../../data/storyStore';
@@ -17,6 +20,9 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export function StoryListScreen() {
   const navigation = useNavigation<Nav>();
+  const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
+  const styles = useThemedStyles(makeStyles);
   const [stats, setStats] = useState<Record<string, StoryStat>>({});
   const stories = storySource.getStories();
 
@@ -35,7 +41,12 @@ export function StoryListScreen() {
   return (
     <View style={styles.screen}>
       <AppHeader title="Cerita" onBack={() => navigation.goBack()} />
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingBottom: spacing.screen + insets.bottom },
+        ]}
+      >
         <View style={styles.centerColumn}>
           <FadeSlideIn style={styles.fullWidth}>
             <Text style={styles.intro}>
@@ -59,6 +70,7 @@ export function StoryListScreen() {
                     navigation.navigate('Story', { storyId: story.id })
                   }
                   contentStyle={styles.cardContent}
+                  accessibilityLabel={`${story.titleId}. ${story.questions.length} soal`}
                 >
                   <View style={styles.cardRow}>
                     <View
@@ -106,7 +118,8 @@ export function StoryListScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: colors.background,
@@ -182,4 +195,4 @@ const styles = StyleSheet.create({
   },
   spacer12: { height: 12 },
   spacer24: { height: 24 },
-});
+  });

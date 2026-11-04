@@ -7,13 +7,15 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
-import { colors, radius, shadow } from '../theme/theme';
+import { radius, elevation, type Palette } from '../theme/theme';
+import { useThemedStyles } from '../theme/useThemedStyles';
 
 interface ScaleTapCardProps {
   children: React.ReactNode;
   onPress: () => void;
   style?: StyleProp<ViewStyle>;
   contentStyle?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string;
 }
 
 export function ScaleTapCard({
@@ -21,7 +23,9 @@ export function ScaleTapCard({
   onPress,
   style,
   contentStyle,
+  accessibilityLabel,
 }: ScaleTapCardProps) {
+  const styles = useThemedStyles(makeStyles);
   const [scale] = useState(() => new Animated.Value(1));
   const animateTo = useCallback(
     (value: number) => {
@@ -39,7 +43,9 @@ export function ScaleTapCard({
         onPressIn={() => animateTo(0.96)}
         onPressOut={() => animateTo(1)}
         onPress={onPress}
-        style={[styles.card, shadow.card]}
+        accessibilityRole="button"
+        accessibilityLabel={accessibilityLabel}
+        style={[styles.card, elevation.card]}
       >
         <View style={contentStyle}>{children}</View>
       </Pressable>
@@ -47,12 +53,13 @@ export function ScaleTapCard({
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: radius.card,
-    borderWidth: 1,
-    borderColor: colors.border,
-    overflow: 'hidden',
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    card: {
+      backgroundColor: colors.surface,
+      borderRadius: radius.card,
+      borderWidth: 1,
+      borderColor: colors.border,
+      overflow: 'hidden',
+    },
+  });

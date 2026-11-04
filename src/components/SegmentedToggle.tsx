@@ -1,7 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, shadow } from '../theme/theme';
+import { elevation, radius, minTapTarget, type Palette } from '../theme/theme';
+import { useThemedStyles } from '../theme/useThemedStyles';
 import { fontFamily } from '../theme/typography';
 
 interface SegmentedToggleProps<T extends string> {
@@ -15,6 +16,7 @@ export function SegmentedToggle<T extends string>({
   options,
   onChange,
 }: SegmentedToggleProps<T>) {
+  const styles = useThemedStyles(makeStyles);
   return (
     <View style={styles.container}>
       {options.map((option) => {
@@ -23,6 +25,9 @@ export function SegmentedToggle<T extends string>({
           <Pressable
             key={option.value}
             onPress={() => onChange(option.value)}
+            accessibilityRole="button"
+            accessibilityLabel={option.label}
+            accessibilityState={{ selected: active }}
             style={[styles.segment, active && styles.segmentActive]}
           >
             <Text style={[styles.label, active && styles.labelActive]}>
@@ -35,32 +40,34 @@ export function SegmentedToggle<T extends string>({
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    backgroundColor: colors.surfaceMuted,
-    borderRadius: radius.input,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 3,
-  },
-  segment: {
-    flex: 1,
-    paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius.input - 3,
-  },
-  segmentActive: {
-    backgroundColor: colors.primary,
-    ...shadow.card,
-  },
-  label: {
-    fontSize: 14,
-    fontFamily: fontFamily.semibold,
-    color: colors.textSecondary,
-  },
-  labelActive: {
-    color: colors.onPrimary,
-  },
-});
+const makeStyles = (colors: Palette) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      backgroundColor: colors.surfaceMuted,
+      borderRadius: radius.input,
+      borderWidth: 1,
+      borderColor: colors.border,
+      padding: 3,
+    },
+    segment: {
+      flex: 1,
+      minHeight: minTapTarget - 6,
+      justifyContent: 'center',
+      paddingVertical: 10,
+      alignItems: 'center',
+      borderRadius: radius.input - 3,
+    },
+    segmentActive: {
+      backgroundColor: colors.primary,
+      ...elevation.card,
+    },
+    label: {
+      fontSize: 14,
+      fontFamily: fontFamily.semibold,
+      color: colors.textSecondary,
+    },
+    labelActive: {
+      color: colors.onPrimary,
+    },
+  });
